@@ -28,7 +28,8 @@ end entity;
 
 architecture dfault of pd is
 
-  signal ip, detected : std_logic;
+  signal ip       : std_logic;    --< in progress
+  signal detected : std_logic;    --< sequence detected
 
 begin
   assert (CLKIN_RATE >= ENB_RATE) severity failure;
@@ -39,11 +40,8 @@ begin
     variable cnt : natural range 0 to (HOLD_SECS*ENB_RATE);
 
     type state_t is ( IDLE,
-                      WAIT_1, WAIT_10, WAIT_101, WAIT_1010, WAIT_10100,
-                      WAIT_101000, WAIT_1010000, WAIT_10100001, WAIT_101000010,
-                      WAIT_1010000101, WAIT_10100001010, WAIT_101000010100,
-                      WAIT_1010000101000, WAIT_10100001010000, WAIT_101000010100000,
-                      WAIT_1010000101000000, WAIT_10100001010000001,
+                      a, b, c, d, e, f, g, h, i,
+                      j, k, l, m, n, o, p, q,
                       HOLD );
     variable state : state_t;
 
@@ -59,175 +57,173 @@ begin
         case state is
           when IDLE =>
             if start_in then
-              state := WAIT_1;
+              state := a;
             end if;
 
-          when WAIT_1 =>
+          when a =>
             ip <= '1';
             if samplenb_in then
               if data_in = '1' then
-                state := WAIT_10;
+                state := b;
               end if;
             end if;
 
-          when WAIT_10 =>
+          when b =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_101;
-              else
-                state := WAIT_1;
+                state := c;
               end if;
             end if;
 
-          when WAIT_101 =>
+          when c =>
             ip <= '1';
             if samplenb_in then
               if data_in = '1' then
-                state := WAIT_1010;
+                state := d;
               else
-                state := WAIT_1;
+                state := a;
               end if;
             end if;
 
-          when WAIT_1010 =>
+          when d =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_10100;
+                state := e;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_10100 =>
+          when e =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_101000;
+                state := f;
               else
-                state := WAIT_1010;
+                state := d;
               end if;
             end if;
 
-          when WAIT_101000 =>
+          when f =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_1010000;
+                state := g;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_1010000 =>
+          when g =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_10100001;
+                state := h;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_10100001 =>
+          when h =>
             ip <= '1';
             if samplenb_in then
               if data_in = '1' then
-                state := WAIT_101000010;
+                state := i;
               else
-                state := WAIT_1;
+                state := a;
               end if;
             end if;
 
-          when WAIT_101000010 =>
+          when i =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_1010000101;
+                state := j;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_1010000101 =>
+          when j =>
             ip <= '1';
             if samplenb_in then
               if data_in = '1' then
-                state := WAIT_10100001010;
+                state := k;
               else
-                state := WAIT_1;
+                state := a;
               end if;
             end if;
 
-          when WAIT_10100001010 =>
+          when k =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_101000010100;
+                state := l;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_101000010100 =>
+          when l =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_1010000101000;
+                state := m;
               else
-                state := WAIT_1010;
+                state := d;
               end if;
             end if;
 
-          when WAIT_1010000101000 =>
+          when m =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_10100001010000;
+                state := n;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_10100001010000 =>
+          when n =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_101000010100000;
+                state := o;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_101000010100000 =>
+          when o =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_1010000101000000;
+                state := p;
               else
-                state := WAIT_101000010;
+                state := i;
               end if;
             end if;
 
-          when WAIT_1010000101000000 =>
+          when p =>
             ip <= '1';
             if samplenb_in then
               if data_in = '0' then
-                state := WAIT_10100001010000001;
+                state := q;
               else
-                state := WAIT_1;
+                state := b;
               end if;
             end if;
 
-          when WAIT_10100001010000001 =>
+          when q =>
             ip <= '1';
             if samplenb_in then
               cnt := 0;
               if data_in = '1' then
                 state := HOLD;
               else
-                state := WAIT_1;
+                state := a;
               end if;
             end if;
 
@@ -241,8 +237,8 @@ begin
               end if;          --  recognition synchronized correctly with samplenb_in
             end if;
 
-          when others =>      --< GHDL complains
-            state := IDLE;
+        when others =>      --< GHDL complains
+          state := IDLE;
 
         end case;
       end if;
